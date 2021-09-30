@@ -1,4 +1,4 @@
 # advSoftawreEngineeringFinalProject
 the repository for the final project for advanced software enginering
 
-the artifacts for the experiamental and README for QAdroid can be found [Here](Sharma, Aman, and Rupesh Nasre. "QADroid: regression event selection for Android applications." Proceedings of the 28th ACM SIGSOFT International Symposium on Software Testing and Analysis. 2019.)
+the artifacts for the experiamental and README for QAdroid can be found [Here](https://dl.acm.org/do/10.1145/3339072/abs/)
