@@ -1,0 +1,122 @@
+Analysis of read through
+is it truly the first activity and event driven regression testing?
+
+investigate claims:
+	1) richer change-set analyzer
+	2) pictorial representation
+	3) represents as a mapping between activities and user elements
+
+Agree with point that mobile applications are growing fast and mobile apps are updated
+frequently
+
+regression tests - ensures updates dont break exisiting working code
+
+android runs on Dalvik virtual machine
+
+android uses event-based program modeling
+
+hard to test due to exponential numbers, and external asynchronous events
+
+claim to be tester friendly, need to verify
+
+Regression test selection does not lend itself well to android
+
+50 open source applications, good news for me!
+
+reduces activity selection by 58 % and event selection by 74 %
+
+competition, redroid: invetsigate this tool
+
+qadroid removes costly setup, IE only running specified changes
+
+current tools miss:
+	permissions, config changes, and onClick() in layout XML
+
+their github study shows more XML events than java events, possible investigation
+
+figure 4 is good example of missed change with currnt RTS as it is in XML
+
+QA droid five components:
+	event finder, call graph generator, change-set analyzer, event selector,
+		and pictorial flow generator
+
+event finder:
+	from apk, maps activity -> element -> EventHandler 
+	uses flowdroid to map activity -> eventHandler
+	uses static analysis to find element -> eventHandler
+	finally gives activity -> elemntId -> eventHandler
+	also finds activity -> layoutId mapping via static analysis
+	and layoutXml → ElementId → EventHandler via analysing resources.arsc
+	it uses these to find changes and map them
+
+call graph generator:
+	no main(), instead override predefined
+	these are then called by OS according to lifecycle flows
+	flowdroid makes a dummy main which emulates the andorid OS
+	build off flowdroid, make dumby, and generate call graph from it
+	utilizes spark tool
+	then does breadth first search using each eventHandler as a callback
+	forms a map between Events -> methods
+
+change set analyzer:
+	takes two versions of app, finds changes
+	compares java soruce code, the android manifest files, and the layout files
+	builds control flow graphs and does depth first search
+	parses manifest to find differences
+	a diff covers more than a typical RTS
+	analyses layout file to find changes in xml
+		almost complete, considers all file-types except android native library
+		and META INF folder containing app-specific certifications
+
+event selector:
+	the event finder, call graph generator, and change set analyzer all work together
+		to select events
+
+Pictorial flow generator:
+	QAdroid has user interface
+	helps the user understand and use reuslts returned from the event selectorS
+	builds a pictorial representation of activities via a gui- helps manual testing
+
+Their findings:
+	ran on 1105 releases of 50 programs (open source)
+	aimed to:
+		establish the significance of the first activity and event aware regression
+			approach to reduce manual testing efforts
+		efficiency of QAdroid by means of analysis time
+		the correctness of the change set analyzer
+		the usefullness of the pictorial output (seems hard to measure to me)
+
+Set up:
+	ran using Android development environment, intellij IDEA, eclipse, Android studio
+	ran using Linux (will try to use windows for mine)
+	used Flowdroid and spark
+
+Benchmarks:
+	ran only on github repositiories with multiple releases
+	apks of said releases must be available
+	sources should be under
+
+Findings:
+	qaDroid reduced activitiy selection by 60 percent, IE it selected 40 percent
+		activities as useful for regression testing
+	Had 100 percent activity selection for LocationReportEnabler and NXloader
+	table 2 has a lot of info, might make choosing what apps to run better
+	use table 2 in conjunction with figures 8 and 9, very useful info
+	app greatly helps reduce external activities that never changes
+	event seelction slightly smaller than activity selection
+	can see change in events that map to multiple activities
+	70% activities for 80% of the apps, slighlty beytter representation, no outliers
+	<50% for 80%, solid representation as well
+	these indicate that manual testers can rule out testing over about 74% of events
+	redroid is competitor, closed source, and needs test cases, no bueno
+	QAdroid chose 25.54% of events, while events of selected agffected modules was
+		41.25%, improves affected events by 38.08%
+	They found change set to be complete
+	found average time to be 19.63 seconds to find events
+	rating of 3.9 5 on average for user study on pictoral graph
+	one review mentioned would be hard for UAT testing
+	may contain issues of validity from Flowdroid limitations
+	dataset appears to be fair and unbiased selection of apps
+
+Overall conclusions:
+	reduced activity selection by 58% and event selection by 74%
